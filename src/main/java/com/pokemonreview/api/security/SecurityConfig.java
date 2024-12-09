@@ -30,6 +30,15 @@ public class SecurityConfig {
         this.authEntryPoint = authEntryPoint;
     }
 
+    // 定義 Swagger 路徑變數
+    private static final String[] SWAGGER_WHITELIST = {
+            "/v2/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui/index.html",
+            "/swagger-resources/**",
+            "/webjars/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -41,7 +50,9 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                // 配置 antMatchers
                 .antMatchers("/api/auth/**").permitAll()
+                .antMatchers(SWAGGER_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
